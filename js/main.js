@@ -5,40 +5,25 @@ Ogni secondo il nostro countdown dovrà scalare fino alle 9:30 di domani mattina
 */
 "use script";
 
-// Dichiaro le variabili
+// // Dichiaro le variabili
 const countdownCorrection = document.querySelector(".clock-countdown");
 const dateNowBox = document.querySelector(".date-now");
 
-let clockNow = new Date();
+const clockTimeCorrection = new Date("Jul 14, 2023 09:30:00").getTime();
 
-let clockCorrection = new Date(
-    clockNow.getFullYear(),
-    clockNow.getMonth(),
-    clockNow.getDate() + 1,
-    9,
-    30,
-    0
-);
+countdownCorrection.innerHTML = "La correzione dell'esercizio si terrà il 14 luglio 2023 alle 9:30";
 
-// Aggiorno - data attuale
-setInterval(function () {
-    clockNow = new Date();
-}, 1000);
-
-countdownCorrection.innerHTML = `La correzione dell'esercizio si terrà il ${clockCorrection.getDate()}/${clockCorrection.getMonth()} alle ${clockCorrection.getHours()} e ${clockCorrection.getMinutes()}`;
-
-// Stampo la data attuale
+// Stampo la scritta con la data della correzione in un altro box dopo tot che la pagina è stata caricata
 setTimeout(function () {
-    dateNowBox.innerHTML = `La correzione dell'esercizio si terrà il ${clockCorrection.getDate()}/${clockCorrection.getMonth()} alle ${clockCorrection.getHours()} e ${clockCorrection.getMinutes()}`;
+    dateNowBox.innerHTML = "La correzione dell'esercizio si terrà il 14 luglio 2023 alle 9:30";
 }, 1000)
 
 // Aggiorno - differenza e contatore
-setInterval(function () {
-    const difference = clockCorrection.getTime() - clockNow.getTime();
-    
-    if (difference < 0) {
-        countdownCorrection.innerHTML = "Tempo scaduto";
-    }
+const timeToCorrection = setInterval(function () {
+
+    const now = new Date().getTime();
+
+    const difference = clockTimeCorrection - now;
 
     // Calcolo il tempo rimanente in ore, minuti e secondi
     let timeLeft = difference;
@@ -50,4 +35,9 @@ setInterval(function () {
     timeLeft -= seconds * 1000;
 
     countdownCorrection.innerHTML = `Mancano ${hours} ore ${minutes} minuti e ${seconds} secondi alla correzione`;
+
+    if (difference < 0) {
+        clearInterval(timeToCorrection);
+        countdownCorrection.innerHTML = "Tempo scaduto - la correzione è iniziata";
+    }
 }, 1000);
